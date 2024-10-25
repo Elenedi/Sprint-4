@@ -12,25 +12,25 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.PageFactory;
 import pages.HomePage;
-import pages.OrderPage;
-import tests.TestsSetUp;
-import tests.OrderPageTest;
+
+
 import static org.junit.Assert.assertEquals;
+import static pages.HomePage.homePageUrl;
 
 @RunWith(Parameterized.class)
-public class FAQTest extends TestsSetUp {
+public class FAQsTest {
 
     private WebDriver driver;
     private HomePage homePage;
     private final String question;
     private final String expectedAnswer;
 
-   public FAQTest(String question, String expectedAnswer) {
+   public FAQsTest(String question, String expectedAnswer) {
         this.question = question;
         this.expectedAnswer = expectedAnswer;
     }
-}
-@Parameterized.Parameters
+
+@Parameterized.Parameters //Вот тут не разобралась как его убрать, вроде добавила в новый класс данные, но если здесь удаляю, то автотесты летят
 public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
                {"Сколько это стоит? И как оплатить?", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."},
@@ -50,12 +50,12 @@ public static Collection<Object[]> data() {
               options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
               driver = new ChromeDriver(options);
               driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-               driver.get("https://qa-scooter.praktikum-services.ru/");
+               driver.get(homePageUrl);
              homePage = PageFactory.initElements(driver, HomePage.class);
              }
 
 
-    }
+
     @Test
     public void checkQuestion() {
         homePage.scrollHomePage(); // Скролим страницу, чтобы вопросы были видны
@@ -63,7 +63,7 @@ public static Collection<Object[]> data() {
         assertEquals(expectedAnswer, actualAnswer);
     }
 
-    @After
+   @After
     public void tearDown() {
         if (driver != null) {
            driver.quit();

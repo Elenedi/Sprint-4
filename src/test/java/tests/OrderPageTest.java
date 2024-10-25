@@ -11,15 +11,23 @@ import pages.OrderPage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+import tests.TestsSetUp;
 
 import static org.junit.Assert.assertTrue;
+import static pages.HomePage.homePageUrl;
+
+
 
 @RunWith(Parameterized.class)
 public class OrderPageTest {
 
 
     private WebDriver driver;
-    private OrderPage orderPage;
+   private OrderPage orderPage;
 
     // Параметры теста
     @Parameterized.Parameter(0)
@@ -41,14 +49,20 @@ public class OrderPageTest {
     @Parameterized.Parameter(8)
     public String comment;
 
+    public OrderPageTest(/*WebDriver driver*/) {
+       // super(driver);
+    }
+
+
     @Before
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(homePageUrl);
         orderPage = new OrderPage(driver);
+
 
         // Закрытие баннера с cookie, если он есть
         orderPage.closeCookieBanner();
@@ -56,16 +70,22 @@ public class OrderPageTest {
 
     //Заказ по верхней кнопке:
     @Test
-    public void testOrderPageTestThroughHeaderButton() {
-        orderPage.clickOrderButtonHeader(); // Нажатие на верхнюю кнопку "Заказать"
+    public void orderPageThroughHeaderButtonTest() {
+        orderPage.clickOrderButtonHeader();
+     waitForElementToBeVisible(By.xpath("/html/body/div/div/div[2]"));
         orderPage.enterDataFirstOrderPage(name, surname, address, metro, phoneNumber);
+        orderPage.selectNextButton();/*nextButton*/
         orderPage.enterDataSecondOrderPage(color, date, rentalDays, comment);
         assertTrue(orderPage.successfullyText());
+    }
+    private void waitForElementToBeVisible(By locator) {
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10)); // Ждать до 10 секунд
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     //для заказа по нижней кнопке:
     @Test
-    public void testOrderPageTestThroughDownButton() {
+    public void orderPageThroughDownButtonTest() {
         orderPage.scrollOrderPage(); // Скролим страницу
         orderPage.clickOrderButtonDown(); // Нажатие на нижнюю кнопку "Заказать"
         orderPage.enterDataFirstOrderPage(name, surname, address, metro, phoneNumber);
@@ -75,8 +95,10 @@ public class OrderPageTest {
 
 
     @After
-    public void teardown() {
-        driver.quit();
+    public void tearDown() {
+       if (driver != null) {
+           driver.quit();
+       }
     }
 
     @Parameterized.Parameters
