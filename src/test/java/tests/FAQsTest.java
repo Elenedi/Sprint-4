@@ -13,7 +13,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.PageFactory;
 import pages.HomePage;
 
-
 import static org.junit.Assert.assertEquals;
 import static pages.HomePage.homePageUrl;
 
@@ -30,7 +29,7 @@ public class FAQsTest {
         this.expectedAnswer = expectedAnswer;
     }
 
-@Parameterized.Parameters //Вот тут не разобралась как его убрать, вроде добавила в новый класс данные, но если здесь удаляю, то автотесты летят
+@Parameterized.Parameters
 public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
                {"Сколько это стоит? И как оплатить?", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."},
@@ -50,7 +49,7 @@ public static Collection<Object[]> data() {
               options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
               driver = new ChromeDriver(options);
               driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-               driver.get(homePageUrl);
+               driver.get(HomePage.homePageUrl);
              homePage = PageFactory.initElements(driver, HomePage.class);
              }
 

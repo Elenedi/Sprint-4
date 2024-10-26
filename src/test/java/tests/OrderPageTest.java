@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
+import pages.HomePage;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
@@ -72,16 +73,18 @@ public class OrderPageTest {
     @Test
     public void orderPageThroughHeaderButtonTest() {
         orderPage.clickOrderButtonHeader();
-     waitForElementToBeVisible(By.xpath("/html/body/div/div/div[2]"));
+     orderPage.waitForElementToBeVisible(By.xpath("//body/div/div/div[2]"));
+             //*[@class='Order_Content__bmtHS']"));
+     //body/div/div/div[2]"));
         orderPage.enterDataFirstOrderPage(name, surname, address, metro, phoneNumber);
         orderPage.selectNextButton();/*nextButton*/
         orderPage.enterDataSecondOrderPage(color, date, rentalDays, comment);
         assertTrue(orderPage.successfullyText());
     }
-    private void waitForElementToBeVisible(By locator) {
+    /*private void waitForElementToBeVisible(By locator) {
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10)); // Ждать до 10 секунд
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
+    }*/
 
     //для заказа по нижней кнопке:
     @Test

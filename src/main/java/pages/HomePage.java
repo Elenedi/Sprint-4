@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.HashMap;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage {
     public static void main(String[] args) {
@@ -13,6 +14,12 @@ public class HomePage {
 
     private final WebDriver driver;
     public static String homePageUrl = "https://qa-scooter.praktikum-services.ru/";
+
+
+    //  public void waitForElementToBeVisible(By locator) {
+    //     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Ждать до 10 секунд
+    //     wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    //  }
 
     // Локаторы вопросов с 1-8 из раздела "Вопросы о важном":
     //Вопрос 1:
@@ -34,24 +41,41 @@ public class HomePage {
 
     // Локаторы ответов с 1 - 8 на вопросы из раздела "Вопросы о важном":
     //Ответ 1:
-    private static By answerHowMuch = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[1]/div[2]/p");
+    private static By answerHowMuch = By.id("accordion__panel-8"); //xpath("//*[@id='accordion__panel-8']");
+    //div/div[1]/div[2]/p");
+    //"/html/body/div/div/div/div[5]/div[2]/div/div[1]/div[2]/p");
     //Ответ 2:
-    private static By answerWantSeveral = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[2]/div[2]/p");
+    private static By answerWantSeveral = By.id("accordion__panel-9");  //xpath("//*[@id='accordion__panel-9']");
+    //div/div[2]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[2]/div[2]/p");
     //Ответ 3:
-    private static By answerRentTime = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[3]/div[2]/p");
+    private static By answerRentTime = By.id("accordion__panel-10");  //xpath("//*[@id='accordion__panel-10']");
+    //div/div[3]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[3]/div[2]/p");
     //Ответ 4:
-    private static By answerOrderingToday = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[4]/div[2]/p");
+    private static By answerOrderingToday = By.id("accordion__panel-11");  //xpath("//*[@id='accordion__panel-11']");
+    //div/div[4]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[4]/div[2]/p");
     //Ответ 5:
-    private static By answerChangingRentTime = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[5]/div[2]/p");
+    private static By answerChangingRentTime = By.id("accordion__panel-12");  //xpath("//*[@id='accordion__panel-12']");
+    //div/div[5]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[5]/div[2]/p");
     //ОТвет 6:
-    private static By answerScooterCharger = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[6]/div[2]/p");
+    private static By answerScooterCharger = By.id("accordion__panel-13");  //xpath("//*[@id='accordion__panel-13']");
+    //div/div[6]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[6]/div[2]/p");
     //Ответ 7:
-    private static By answerCancellingOrder = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[7]/div[2]/p");
+    private static By answerCancellingOrder = By.id("accordion__panel-14");  //xpath("//*[@id='accordion__panel-14']");
+    //div/div[7]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[7]/div[2]/p");
     //Ответ 8:
-    private static By answerLivingFar = By.xpath("/html/body/div/div/div/div[5]/div[2]/div/div[8]/div[2]/p");
+    private static By answerLivingFar = By.id("accordion__panel-15");  //xpath("//*[@id='accordion__panel-15']");
+    //div/div[8]/div[2]/p");
+    ///html/body/div/div/div/div[5]/div[2]/div/div[8]/div[2]/p");
 
     // Ключ: значение (вопрос: ответ):
     static HashMap<By, By> map = new HashMap<>();
+
     static {
         //Сколько это стоит? И как оплатить? == Сутки — 400 рублей. Оплата курьеру — наличными или картой.
         map.put(howMuch, answerHowMuch);
@@ -83,11 +107,17 @@ public class HomePage {
 
     // Открыть элемент списка вопросов, ждем появления текста с ответом:
     public String getAnswer(By questionLocator) {
+
+        new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.elementToBeClickable(questionLocator));
+        //until(ExpectedConditions.visibilityOfElementLocated(map.get(questionLocator)));
+        //(driver ->
+        //driver.findElement(map.get(questionLocator)).getText() != null
+        //  && !driver.findElement(map.get(questionLocator)).getText().isEmpty());
         driver.findElement(questionLocator).click();
-        new WebDriverWait(driver, Duration.ofSeconds(15)).until(driver ->
-                driver.findElement(map.get(questionLocator)).getText() != null
-                        && !driver.findElement(map.get(questionLocator)).getText().isEmpty());
-        return driver.findElement(map.get(questionLocator)).getText();
+        By answerLocator = map.get(questionLocator);
+        new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.visibilityOfElementLocated(answerLocator));
+        return driver.findElement(answerLocator).getText();
+                //(map.get(questionLocator)).getText();
     }
 
     // Новый метод для получения ответа на вопрос по тексту:
